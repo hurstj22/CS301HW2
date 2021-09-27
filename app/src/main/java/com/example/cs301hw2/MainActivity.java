@@ -31,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
 
         //create the button object to interact with
         Button resetButton = (Button) findViewById(R.id.resetButton);
-
         resetButton.setOnClickListener((View.OnClickListener) puzzleController);
 
+        //create the drag listener
+        puzzleSurfaceView.setOnDragListener(puzzleController);
     }
 }

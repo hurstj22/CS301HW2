@@ -1,8 +1,5 @@
 package com.example.cs301hw2;
 
-import android.util.Log;
-
-import java.util.ArrayList;
 import java.util.Random;
 
 /**
@@ -16,21 +13,26 @@ public class PuzzleModel {
     private int counter;
     private boolean hasWon;
     private int randArray[]; //array to store random 0 - 15
+    private int mult; //multiplier to make the squares bigger/smaller
+    public int[] startIndex, endIndex;
 
     public PuzzleModel(){
         theTiles = new Tile [4][4]; //initialize to 4x4 array
         counter = 0;
+        mult = 400; //pretty good sized squares for the Pixel C emulator
+        startIndex= new int[2];
+        endIndex = new int[2];
         hasWon = false;
         randArray = new int[16];
-        genRandArray(); //populates the randArray with random nums 0 - 15, exactly once
+        genRandArray(); //populates the randArray with random nums 1 - 16, exactly once
 
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++) {
                 if(randArray[counter] < 16) {
-                    theTiles[i][j] = new Tile(i * 400, j * 400, randArray[counter]); //create a new tile and assign it to the array according to the counter
+                    theTiles[i][j] = new Tile(i * mult, j * mult, randArray[counter]); //create a new tile and assign it to the array according to the counter
                 }
                 else{
-                    theTiles[i][j] = new Tile(i * 400, j * 400, 0); //assigns whatever one in the randArray is 16 to actually be 0 in the Tiles array so it won't show up
+                    theTiles[i][j] = new Tile(i * mult, j * mult, 0); //assigns whatever one in the randArray is 16 to actually be 0 in the Tiles array so it won't show up
                 }
                 counter++; //increment counter so it starts at 0 and ends at 15
             }
@@ -62,4 +64,24 @@ public class PuzzleModel {
         }
     }
 
+    /**
+     *
+     * @return the multiplier that was used to create the squares
+     */
+    public int getMult(){
+        return mult;
+    }
+
+    /**
+     * swaps the tiles at the corresponding indexes IF
+     * they are next to one another
+     * @param startIndex
+     * @param endIndex
+     */
+    public void swap(int[] startIndex, int[] endIndex){
+        Tile copiedTile = new Tile(theTiles[startIndex[0]][startIndex[1]]); //copy the first Tile to a new empty Tile
+        theTiles[startIndex[0]][startIndex[1]] = new Tile(theTiles[endIndex[0]][endIndex[1]]); //turn the first Tile into the ending tile
+        theTiles[endIndex[0]][endIndex[1]] = new Tile(copiedTile); //now set the ending tile to be the new first tile
+        //the o'l 1 2 switcharoo
+    }
 }

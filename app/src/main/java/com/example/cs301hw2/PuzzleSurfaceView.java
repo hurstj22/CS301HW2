@@ -8,6 +8,11 @@ import android.view.SurfaceView;
 
 import java.util.ArrayList;
 
+/**
+ * The PuzzleSurfaceView is a custom SurfaceView that
+ * draws the board of Tiles on the screen in a 4X4 arrangement
+ * The surface view instantiates the puzzle's model as found in the PuzzleModel class
+ */
 public class PuzzleSurfaceView extends SurfaceView {
 
     PuzzleModel pModel;
