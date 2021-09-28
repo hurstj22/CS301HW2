@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 /**
- * Author: James Hurst (hurstj22@up.edu
+ * Author: James Hurst (hurstj22@up.edu)
  *
  * Version: 9/27/2021
  *
@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         Button resetButton = (Button) findViewById(R.id.resetButton);
         resetButton.setOnClickListener((View.OnClickListener) puzzleController);
 
-        //create the drag listener
-        puzzleSurfaceView.setOnDragListener(puzzleController);
+        //create the touch listener
+        puzzleSurfaceView.setOnTouchListener(puzzleController);
     }
 }

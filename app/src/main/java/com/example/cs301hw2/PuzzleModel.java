@@ -15,8 +15,10 @@ public class PuzzleModel {
     private int randArray[]; //array to store random 0 - 15
     private int mult; //multiplier to make the squares bigger/smaller
     public int[] startIndex, endIndex;
+    private PuzzleController parentCon;
 
-    public PuzzleModel(){
+    public PuzzleModel(PuzzleController parentCon){
+        this.parentCon = parentCon;
         theTiles = new Tile [4][4]; //initialize to 4x4 array
         counter = 0;
         mult = 400; //pretty good sized squares for the Pixel C emulator
@@ -38,7 +40,6 @@ public class PuzzleModel {
             }
         }
     }
-
 
     /**
      * generates a random numbers from 1 - 16 to populate the random array for the puzzle
@@ -73,15 +74,69 @@ public class PuzzleModel {
     }
 
     /**
-     * swaps the tiles at the corresponding indexes IF
-     * they are next to one another
+     * getter method to check on the hasWon variable for the win functionality
+     * @return
+     */
+    public boolean getHasWon(){
+        return hasWon;
+    }
+
+    /**
+     * swaps the tiles at the corresponding indexes
+     * went to office hours with Dr Tribelhorn to help with this swap function
      * @param startIndex
      * @param endIndex
      */
     public void swap(int[] startIndex, int[] endIndex){
-        Tile copiedTile = new Tile(theTiles[startIndex[0]][startIndex[1]]); //copy the first Tile to a new empty Tile
-        theTiles[startIndex[0]][startIndex[1]] = new Tile(theTiles[endIndex[0]][endIndex[1]]); //turn the first Tile into the ending tile
-        theTiles[endIndex[0]][endIndex[1]] = new Tile(copiedTile); //now set the ending tile to be the new first tile
-        //the o'l 1 2 switcharoo
+        float oldX, oldY;
+
+        oldX = theTiles[startIndex[0]][startIndex[1]].getX();
+        theTiles[startIndex[0]][startIndex[1]].setX(theTiles[endIndex[0]][endIndex[1]].getX());
+        theTiles[endIndex[0]][endIndex[1]].setX(oldX);
+
+        oldY = theTiles[startIndex[0]][startIndex[1]].getY();
+        theTiles[startIndex[0]][startIndex[1]].setY(theTiles[endIndex[0]][endIndex[1]].getY());
+        theTiles[endIndex[0]][endIndex[1]].setY(oldY);
+
+        Tile temp = theTiles[startIndex[0]][startIndex[1]];
+        theTiles[startIndex[0]][startIndex[1]] = theTiles[endIndex[0]][endIndex[1]];
+        theTiles[endIndex[0]][endIndex[1]] = temp;
     }
-}
+
+    /**
+     * This function makes all the moves by performing
+     * bounds checking as well as then swapping the tiles
+     * once the bounds have been confirmed to be valid
+     * @param startIndex
+     * @param endIndex
+     */
+    public void makeMove(int[] startIndex, int[] endIndex) {
+        int upBound = 4;
+        int downBound = -1;
+
+        //must first bound check the index before checking to see if the number is zero
+        if (endIndex[0] > downBound && endIndex[0] < upBound && //is the tile row within the bounds
+                endIndex[1] > downBound && endIndex[1] < upBound) { //is the tile col within the bounds)
+
+            if (theTiles[endIndex[0]][endIndex[1]].getNum() == 0){ //is the tile the empty one
+
+                //swap if on the same col and row is up or down from the start index
+                if (startIndex[0] == endIndex[0] &&
+                        ((startIndex[1] == endIndex[1] + 1 && endIndex[1] + 1 < upBound) ||
+                                (startIndex[1] == endIndex[1] - 1 && endIndex[1] - 1 > downBound))) {
+                    swap(startIndex, endIndex);
+                }
+                //swap if on the same row and col is left or right from the start index
+                else if (startIndex[1] == endIndex[1] &&
+                        ((startIndex[0] == endIndex[0] + 1 && endIndex[0] + 1 < upBound) ||
+                                (startIndex[0] == endIndex[0] - 1 && endIndex[0] - 1 > downBound))) {
+                    swap(startIndex, endIndex);
+                }
+        }
+    }
+        //tell control to check if game has been won
+        hasWon = parentCon.checkWin();
+        //update model on gameboard each time a move has been made
+        parentCon.modelUpdate();
+    }
+} //end of model class
