@@ -18,6 +18,7 @@ public class PuzzleController implements View.OnClickListener, View.OnTouchListe
     private PuzzleSurfaceView puzzleView;
 
     public PuzzleController(PuzzleSurfaceView puzzle) {
+
         puzzleView = puzzle;
         puzzleModel = new PuzzleModel(this);
         puzzleView.setModel(puzzleModel);
@@ -99,7 +100,8 @@ public class PuzzleController implements View.OnClickListener, View.OnTouchListe
         int counter = 1;
         for(int i = 0; i < puzzleModel.theTiles.length; i++){
             for(int j = 0; j < puzzleModel.theTiles[i].length; j++){
-                if(counter != puzzleModel.theTiles[i][j].getNum() && counter < 16){
+                if(counter != puzzleModel.theTiles[j][i].getNum() && counter < 16){
+                    Log.e("TileWinNums", "" + counter + ", " + puzzleModel.theTiles[j][i].getNum());
                     return false; //stop as soon as finds incorrect num
                 }
                 counter++;

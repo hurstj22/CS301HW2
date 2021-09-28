@@ -84,7 +84,7 @@ public class PuzzleSurfaceView extends SurfaceView {
                 public void onFinish() {
                     System.out.println("You win!");
                 }
-                }.start();
+            }.start();
         }
     }
 }
